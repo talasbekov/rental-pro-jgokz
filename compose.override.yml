@@ -50,6 +50,11 @@ services:
     ports:
       - "5432:5432"
 
+  redis:
+    restart: "no"
+    ports:
+      - "6379:6379"
+
   adminer:
     restart: "no"
     ports:
@@ -92,6 +97,24 @@ services:
     ports:
       - "1080:1080"
       - "1025:1025"
+
+  bot:
+    restart: "no"
+    ports:
+      - "8001:8001"
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.bot
+    develop:
+      watch:
+        - path: ./backend
+          action: sync
+          target: /app/backend
+          ignore:
+            - ./backend/.venv
+            - .venv
+        - path: ./backend/pyproject.toml
+          action: rebuild
 
   frontend:
     restart: "no"

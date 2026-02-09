@@ -14,23 +14,15 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-# target_metadata = None
-
-from app.models import SQLModel  # noqa
-from app.core.config import settings # noqa
+from shared.models import SQLModel  # noqa
+from app.core.config import settings  # noqa
 
 target_metadata = SQLModel.metadata
 
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
-
 
 def get_url():
-    return str(settings.SQLALCHEMY_DATABASE_URI)
+    # Use sync DSN for Alembic migrations
+    return str(settings.SQLALCHEMY_DATABASE_URI_SYNC)
 
 
 def run_migrations_offline():

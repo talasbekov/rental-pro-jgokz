@@ -1,0 +1,123 @@
+# generated: 2026-02-08
+# project: rental-pro-jgokz
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-02-08
+project: rental-pro-jgokz
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 1: Первое касание и знакомство с продуктом
+  epic-1: in-progress
+  1-0-initialization-from-starter-template: done
+  1-1-telegram-bot-welcome: backlog
+  1-2-demo-search-without-registration: backlog
+  1-3-apartment-card-preview: backlog
+  1-4-basic-navigation-structured-flow: backlog
+  1-5-landing-page-with-qr-code: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2: Листинг квартир и онбординг хозяев
+  epic-2: backlog
+  2-1-host-registration-and-verification: backlog
+  2-2-add-apartment-via-mini-app: backlog
+  2-3-edit-apartment-info: backlog
+  2-4-apartment-status-and-baseline-photo: backlog
+  2-5-verified-status-for-apartment: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: Поиск и подбор квартир
+  epic-3: backlog
+  3-1-nlp-search-natural-language: backlog
+  3-2-search-results-apartment-cards: backlog
+  3-3-geolocation-distance-sorting: backlog
+  3-4-night-mode: backlog
+  3-5-favorites: backlog
+  3-6-full-apartment-card-mini-app: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: Бронирование и оплата
+  epic-4: backlog
+  4-1-guest-verification-first-booking: backlog
+  4-2-booking-and-hold: backlog
+  4-3-kaspi-payment-pdf-check: backlog
+  4-4-payment-aggregator: backlog
+  4-5-booking-confirmation-and-instructions: backlog
+  4-6-booking-cancellation: backlog
+  4-7-checkout-and-booking-history: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: Доступ к квартирам и гарантия заселения
+  epic-5: backlog
+  5-1-manual-key-handover: backlog
+  5-2-smart-lock-code-ttlock: backlog
+  5-3-smart-lock-status-monitoring: backlog
+  5-4-check-in-guarantee-anti-fraud: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: Отзывы, рейтинги и доверие
+  epic-6: backlog
+  6-1-mutual-reviews-after-booking: backlog
+  6-2-guest-rating-for-hosts: backlog
+  6-3-guest-blocking-blacklist: backlog
+  6-4-personal-data-archiving: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Дашборд хозяина и управление
+  epic-7: backlog
+  7-1-google-calendar-sync: backlog
+  7-2-income-and-occupancy-stats: backlog
+  7-3-auto-payout-after-checkout: backlog
+  7-4-review-notifications: backlog
+  7-5-bot-quick-actions-and-morning-digest: backlog
+  epic-7-retrospective: optional
+
+  # Epic 8: Коммуникация и поддержка
+  epic-8: backlog
+  8-1-faq-bot-knowledge-base: backlog
+  8-2-live-operator-and-escalation: backlog
+  8-3-booking-status-notifications: backlog
+  8-4-incident-tracking: backlog
+  epic-8-retrospective: optional
+
+  # Epic 9: Админ-панель и операции
+  epic-9: backlog
+  9-1-admin-dashboard-stats: backlog
+  9-2-action-log-with-filters: backlog
+  9-3-review-and-complaint-moderation: backlog
+  9-4-user-blocking-and-apartment-management: backlog
+  9-5-financial-analytics-by-city-district: backlog
+  epic-9-retrospective: optional
