@@ -116,6 +116,19 @@ services:
         - path: ./backend/pyproject.toml
           action: rebuild
 
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: "no"
+    command:
+      - "http"
+      - "bot:8001"
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    ports:
+      - "4040:4040"  # ngrok web interface
+    depends_on:
+      - bot
+
   frontend:
     restart: "no"
     ports:

@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЖильеGO — Design Directions</title>
+<style>
+  :root {
+    --brand: #00b7c9;
+    --brand-hover: #009dac;
+    --brand-light: #e0f7fa;
+    --brand-text: #0891a2;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --trust: #3b82f6;
+    --grey-50: #f9fafb;
+    --grey-100: #f3f4f6;
+    --grey-200: #e5e7eb;
+    --grey-300: #d1d5db;
+    --grey-400: #9ca3af;
+    --grey-500: #6b7280;
+    --grey-700: #374151;
+    --grey-800: #1f2937;
+    --grey-900: #111827;
+    --white: #ffffff;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--grey-50); color: var(--grey-900); }
+
+  /* === NAV === */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--white); border-bottom: 1px solid var(--grey-200);
+    padding: 12px 24px; display: flex; align-items: center; gap: 16px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .nav h1 { font-size: 16px; font-weight: 700; white-space: nowrap; color: var(--brand); }
+  .nav-pills { display: flex; gap: 8px; flex: 1; overflow-x: auto; }
+  .nav-pill {
+    padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+    border: 1px solid var(--grey-200); background: var(--white); color: var(--grey-700);
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .nav-pill:hover { border-color: var(--brand); color: var(--brand); }
+  .nav-pill.active { background: var(--brand); color: var(--white); border-color: var(--brand); }
+
+  /* === SECTIONS === */
+  .main { padding-top: 72px; }
+  .direction {
+    display: none; padding: 32px 24px; max-width: 1200px; margin: 0 auto;
+  }
+  .direction.active { display: block; }
+  .dir-header { margin-bottom: 32px; }
+  .dir-header h2 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  .dir-header .subtitle { font-size: 14px; color: var(--grey-500); line-height: 1.5; max-width: 640px; }
+  .dir-header .tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .tag {
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 500;
+    background: var(--brand-light); color: var(--brand-text);
+  }
+  .tag.grey { background: var(--grey-100); color: var(--grey-500); }
+
+  /* === PHONE FRAME === */
+  .screens { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+  .screen-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .screen-label { font-size: 13px; font-weight: 600; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.5px; }
+  .phone {
+    width: 375px; height: 720px; border-radius: 40px; overflow: hidden;
+    border: 8px solid var(--grey-900); background: var(--white);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 150px; height: 28px; background: var(--grey-900);
+    border-radius: 0 0 20px 20px; z-index: 10;
+  }
+  .phone-content { height: 100%; overflow-y: auto; position: relative; }
+
+  /* === DESKTOP FRAME === */
+  .desktop {
+    width: 100%; max-width: 960px; height: 540px; border-radius: 12px; overflow: hidden;
+    border: 2px solid var(--grey-200); background: var(--white);
+    box-shadow: var(--shadow-lg); position: relative;
+  }
+  .desktop-bar {
+    height: 36px; background: var(--grey-100); border-bottom: 1px solid var(--grey-200);
+    display: flex; align-items: center; padding: 0 12px; gap: 8px;
+  }
+  .desktop-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .desktop-dot.red { background: #ff5f57; }
+  .desktop-dot.yellow { background: #febc2e; }
+  .desktop-dot.green { background: #28c840; }
+  .desktop-url {
+    flex: 1; height: 24px; background: var(--white); border-radius: 6px;
+    margin-left: 8px; display: flex; align-items: center; padding: 0 10px;
+    font-size: 12px; color: var(--grey-400);
+  }
+  .desktop-content { height: calc(100% - 36px); overflow-y: auto; }
+
+  /* === COMPARISON === */
+  .comparison { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; margin-top: 24px; }
+
+  /* ====================== */
+  /* DIRECTION 1: Airy White */
+  /* ====================== */
+  .d1-card-img {
+    width: 100%; height: 420px; object-fit: cover; position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  .d1-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    padding: 24px 20px 20px; color: white;
+  }
+  .d1-price { font-size: 28px; font-weight: 700; }
+  .d1-price span { font-size: 14px; font-weight: 400; opacity: 0.8; }
+  .d1-location { font-size: 14px; opacity: 0.9; margin-top: 4px; }
+  .d1-badges { display: flex; gap: 8px; margin-top: 10px; }
+  .d1-badge {
+    padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .d1-badge.instant { background: rgba(0,183,201,0.9); color: white; }
+  .d1-badge.verified { background: rgba(255,255,255,0.2); color: white; }
+  .d1-badge.rating { background: rgba(255,255,255,0.2); color: white; }
+  .d1-actions {
+    display: flex; gap: 12px; padding: 16px 20px;
+  }
+  .d1-btn {
+    flex: 1; padding: 14px; border-radius: var(--radius); font-size: 15px;
+    font-weight: 600; border: none; cursor: pointer; transition: all 0.2s;
+  }
+  .d1-btn.primary { background: var(--brand); color: white; }
+  .d1-btn.primary:hover { background: var(--brand-hover); }
+  .d1-btn.secondary { background: var(--grey-100); color: var(--grey-700); }
+  .d1-details { padding: 0 20px 20px; }
+  .d1-detail-row {
+    display: flex; align-items: center; gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--grey-100); font-size: 14px; color: var(--grey-700);
+  }
+  .d1-detail-icon { font-size: 18px; width: 24px; text-align: center; }
+  .d1-gallery-dots {
+    position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px;
+  }
+  .d1-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+  .d1-dot.active { background: white; width: 18px; border-radius: 3px; }
+
+  /* Search screen */
+  .d1-search-header { padding: 36px 20px 16px; }
+  .d1-search-greeting { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+  .d1-search-bar {
+    display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+    background: var(--grey-50); border-radius: var(--radius); border: 1px solid var(--grey-200);
+  }
+  .d1-search-bar input {
+    flex: 1; border: none; background: transparent; font-size: 15px;
+    font-family: inherit; outline: none; color: var(--grey-900);
+  }
+  .d1-search-bar input::placeholder { color: var(--grey-400); }
+  .d1-search-icon { color: var(--grey-400); font-size: 18px; }
+  .d1-quick-filters { display: flex; gap: 8px; padding: 12px 20px; overflow-x: auto; }
+  .d1-filter-chip {
+    padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+    background: var(--white); border: 1px solid var(--grey-200); white-space: nowrap;
+    color: var(--grey-700);
+  }
+  .d1-filter-chip.active { background: var(--brand); color: white; border-color: var(--brand); }
+  .d1-result-card {
+    margin: 8px 20px; border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-card); background: white;
+  }
+  .d1-result-img {
+    width: 100%; height: 200px; position: relative;
+  }
+  .d1-result-img-bg {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .d1-result-heart {
+    position: absolute; top: 12px; right: 12px; width: 36px; height: 36px;
+    border-radius: 50%; background: rgba(255,255,255,0.9); display: flex;
+    align-items: center; justify-content: center; font-size: 18px; cursor: pointer;
+    box-shadow: var(--shadow-sm);
+  }
+  .d1-result-info { padding: 14px 16px; }
+  .d1-result-price { font-size: 20px; font-weight: 700; }
+  .d1-result-price span { font-size: 13px; font-weight: 400; color: var(--grey-500); }
+  .d1-result-meta { font-size: 13px; color: var(--grey-500); margin-top: 4px; }
+  .d1-result-badges-row { display: flex; gap: 6px; margin-top: 8px; }
+  .d1-mini-badge {
+    padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500;
+  }
+  .d1-mini-badge.instant { background: var(--brand-light); color: var(--brand-text); }
+  .d1-mini-badge.rating { background: var(--grey-100); color: var(--grey-700); }
+
+  /* ====================== */
+  /* DIRECTION 2: Glass Blur */
+  /* ====================== */
+  .d2-card { position: relative; height: 100%; }
+  .d2-fullimg {
+    width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  }
+  .d2-glass {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.12); border-top: 1px solid rgba(255,255,255,0.2);
+    padding: 20px; color: white;
+  }
+  .d2-glass-inner {
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.08); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.1);
+  }
+  .d2-glass-price { font-size: 32px; font-weight: 700; }
+  .d2-glass-price span { font-size: 14px; font-weight: 400; opacity: 0.7; }
+  .d2-glass-loc { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+  .d2-glass-badges { display: flex; gap: 8px; margin-top: 10px; }
+  .d2-glass-badge {
+    padding: 4px 10px; border-radius: 6px; font-size: 12px;
+    background: rgba(255,255,255,0.15); color: white; font-weight: 500;
+  }
+  .d2-glass-btn {
+    width: 100%; padding: 14px; border-radius: var(--radius);
+    background: var(--brand); color: white; border: none;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  .d2-glass-secondary {
+    display: flex; gap: 8px; margin-top: 8px;
+  }
+  .d2-glass-sec-btn {
+    flex: 1; padding: 10px; border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);
+    font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;
+  }
+
+  /* ====================== */
+  /* DIRECTION 3: Card Stack */
+  /* ====================== */
+  .d3-stack { padding: 36px 20px 20px; height: 100%; display: flex; flex-direction: column; }
+  .d3-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .d3-greeting { font-size: 20px; font-weight: 700; }
+  .d3-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--brand-light); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .d3-search-mini {
+    padding: 12px 16px; border-radius: 24px; background: var(--grey-50);
+    border: 1px solid var(--grey-200); font-size: 14px; color: var(--grey-400);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+  }
+  .d3-section-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--grey-900); }
+  .d3-cards-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
+  .d3-mini-card {
+    min-width: 260px; border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-card); background: white; flex-shrink: 0;
+  }
+  .d3-mini-img { width: 100%; height: 160px; position: relative; }
+  .d3-mini-img-bg { width: 100%; height: 100%; }
+  .d3-mini-overlay {
+    position: absolute; bottom: 8px; left: 8px; display: flex; gap: 4px;
+  }
+  .d3-mini-tag {
+    padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+    backdrop-filter: blur(8px); background: rgba(0,0,0,0.5); color: white;
+  }
+  .d3-mini-info { padding: 12px; }
+  .d3-mini-price { font-size: 18px; font-weight: 700; }
+  .d3-mini-price span { font-size: 12px; color: var(--grey-500); font-weight: 400; }
+  .d3-mini-loc { font-size: 13px; color: var(--grey-500); margin-top: 2px; }
+  .d3-mini-rating { font-size: 12px; color: var(--grey-700); margin-top: 6px; font-weight: 500; }
+  .d3-bottom-nav {
+    display: flex; justify-content: space-around; padding: 12px 0;
+    border-top: 1px solid var(--grey-100); margin-top: auto;
+  }
+  .d3-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: var(--grey-400); }
+  .d3-nav-item.active { color: var(--brand); }
+  .d3-nav-icon { font-size: 20px; }
+
+  /* ====================== */
+  /* DIRECTION 4: Split View */
+  /* ====================== */
+  .d4-split { display: flex; height: 100%; }
+  .d4-left {
+    width: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative; display: flex; align-items: flex-end;
+  }
+  .d4-left-overlay {
+    padding: 20px; color: white; width: 100%;
+    background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  }
+  .d4-dots { display: flex; gap: 4px; margin-bottom: 8px; }
+  .d4-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+  .d4-dot.active { background: white; width: 12px; border-radius: 2px; }
+  .d4-right { width: 50%; padding: 36px 16px 16px; overflow-y: auto; display: flex; flex-direction: column; }
+  .d4-right-price { font-size: 24px; font-weight: 700; }
+  .d4-right-price span { font-size: 13px; color: var(--grey-500); font-weight: 400; }
+  .d4-right-loc { font-size: 13px; color: var(--grey-500); margin-top: 2px; }
+  .d4-right-badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .d4-right-badge {
+    padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 500;
+  }
+  .d4-right-badge.instant { background: var(--brand-light); color: var(--brand-text); }
+  .d4-right-badge.verified { background: #dbeafe; color: #1d4ed8; }
+  .d4-right-badge.rating { background: #fef3c7; color: #92400e; }
+  .d4-right-divider { height: 1px; background: var(--grey-100); margin: 14px 0; }
+  .d4-right-features { display: flex; flex-wrap: wrap; gap: 8px; }
+  .d4-feature {
+    display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--grey-600);
+    padding: 6px 10px; background: var(--grey-50); border-radius: 6px;
+  }
+  .d4-right-btn {
+    margin-top: auto; padding: 14px; border-radius: var(--radius);
+    background: var(--brand); color: white; border: none;
+    font-size: 15px; font-weight: 600; cursor: pointer; width: 100%;
+  }
+
+  /* ====================== */
+  /* DIRECTION 5: Map-First */
+  /* ====================== */
+  .d5-map {
+    height: 100%; position: relative;
+    background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 50%, #c3dfe5 100%);
+  }
+  .d5-map-header {
+    position: absolute; top: 28px; left: 12px; right: 12px; z-index: 5;
+  }
+  .d5-map-search {
+    padding: 12px 16px; border-radius: 24px; background: white;
+    box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--grey-900);
+  }
+  .d5-map-search-icon { color: var(--grey-400); }
+  .d5-map-filters {
+    display: flex; gap: 6px; margin-top: 8px; padding-left: 4px;
+  }
+  .d5-map-filter {
+    padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    background: white; box-shadow: var(--shadow-sm); color: var(--grey-700);
+  }
+  .d5-map-filter.active { background: var(--brand); color: white; }
+  .d5-pins { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+  .d5-pin {
+    position: absolute; padding: 6px 12px; border-radius: 8px;
+    background: white; box-shadow: var(--shadow-card); font-size: 14px;
+    font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .d5-pin:hover { transform: scale(1.1); box-shadow: var(--shadow-lg); }
+  .d5-pin.active { background: var(--brand); color: white; }
+  .d5-pin.instant::after {
+    content: '⚡'; position: absolute; top: -6px; right: -6px; font-size: 12px;
+  }
+  .d5-bottom-sheet {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: white; border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1); padding: 12px 16px 20px;
+  }
+  .d5-sheet-handle {
+    width: 36px; height: 4px; border-radius: 2px; background: var(--grey-300);
+    margin: 0 auto 12px;
+  }
+  .d5-sheet-card { display: flex; gap: 12px; }
+  .d5-sheet-img {
+    width: 100px; height: 80px; border-radius: var(--radius-sm); flex-shrink: 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+  }
+  .d5-sheet-info { flex: 1; }
+  .d5-sheet-price { font-size: 18px; font-weight: 700; }
+  .d5-sheet-price span { font-size: 12px; color: var(--grey-500); font-weight: 400; }
+  .d5-sheet-meta { font-size: 13px; color: var(--grey-500); margin-top: 2px; }
+  .d5-sheet-badges { display: flex; gap: 4px; margin-top: 6px; }
+  .d5-sheet-badge {
+    padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 500;
+  }
+  .d5-sheet-btn {
+    padding: 10px; border-radius: var(--radius-sm); background: var(--brand);
+    color: white; border: none; font-size: 14px; font-weight: 600;
+    cursor: pointer; width: 100%; margin-top: 10px;
+  }
+
+  /* ====================== */
+  /* DIRECTION 6: Landing */
+  /* ====================== */
+  .d6-landing { background: white; }
+  .d6-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 40px; border-bottom: 1px solid var(--grey-100);
+  }
+  .d6-logo { font-size: 20px; font-weight: 800; color: var(--brand); }
+  .d6-logo span { color: var(--grey-900); }
+  .d6-nav-links { display: flex; gap: 24px; font-size: 14px; color: var(--grey-500); }
+  .d6-nav-cta {
+    padding: 8px 20px; border-radius: 8px; background: var(--brand); color: white;
+    font-size: 14px; font-weight: 600; border: none; cursor: pointer;
+  }
+  .d6-hero {
+    padding: 60px 40px; display: flex; gap: 40px; align-items: center;
+  }
+  .d6-hero-text { flex: 1; }
+  .d6-hero-title { font-size: 36px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+  .d6-hero-title span { color: var(--brand); }
+  .d6-hero-sub { font-size: 16px; color: var(--grey-500); line-height: 1.6; margin-bottom: 24px; }
+  .d6-hero-cta {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px;
+    border-radius: var(--radius); background: var(--brand); color: white;
+    font-size: 16px; font-weight: 600; border: none; cursor: pointer;
+  }
+  .d6-hero-img {
+    width: 280px; height: 340px; border-radius: 24px; flex-shrink: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
+  }
+  .d6-hero-mock-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.6));
+    padding: 20px; color: white;
+  }
+  .d6-hero-mock-price { font-size: 22px; font-weight: 700; }
+  .d6-hero-mock-loc { font-size: 13px; opacity: 0.8; }
+  .d6-stats {
+    display: flex; justify-content: center; gap: 48px; padding: 32px 40px;
+    background: var(--grey-50); border-top: 1px solid var(--grey-100);
+    border-bottom: 1px solid var(--grey-100);
+  }
+  .d6-stat { text-align: center; }
+  .d6-stat-num { font-size: 28px; font-weight: 800; color: var(--brand); }
+  .d6-stat-label { font-size: 13px; color: var(--grey-500); margin-top: 4px; }
+  .d6-features {
+    padding: 48px 40px; display: flex; gap: 24px; justify-content: center;
+  }
+  .d6-feature {
+    flex: 1; max-width: 260px; text-align: center; padding: 24px;
+    border-radius: var(--radius); background: var(--grey-50);
+  }
+  .d6-feature-icon { font-size: 32px; margin-bottom: 12px; }
+  .d6-feature-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .d6-feature-desc { font-size: 14px; color: var(--grey-500); line-height: 1.5; }
+
+  /* === SHARED IMG PLACEHOLDERS === */
+  .img-placeholder {
+    width: 100%; height: 100%; display: flex; align-items: center;
+    justify-content: center; font-size: 48px; color: rgba(255,255,255,0.3);
+  }
+  .img-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+  .img-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+  .img-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+  .img-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+  .img-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+  .img-gradient-6 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+
+  /* === PAYMENT SCREEN === */
+  .pay-screen { padding: 36px 20px 20px; height: 100%; display: flex; flex-direction: column; }
+  .pay-back { font-size: 14px; color: var(--grey-500); margin-bottom: 16px; cursor: pointer; }
+  .pay-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+  .pay-summary {
+    padding: 16px; border-radius: var(--radius); background: var(--grey-50);
+    border: 1px solid var(--grey-200); margin-bottom: 20px;
+  }
+  .pay-summary-row { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; }
+  .pay-summary-row.total { font-weight: 700; font-size: 16px; border-top: 1px solid var(--grey-200); margin-top: 8px; padding-top: 12px; }
+  .pay-timer {
+    display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+    border-radius: var(--radius-sm); background: #fff7ed; border: 1px solid #fed7aa;
+    font-size: 13px; color: #9a3412; margin-bottom: 20px;
+  }
+  .pay-method {
+    padding: 16px; border-radius: var(--radius); border: 2px solid var(--brand);
+    background: var(--brand-light); display: flex; align-items: center; gap: 12px;
+    margin-bottom: 12px;
+  }
+  .pay-method-icon { font-size: 24px; }
+  .pay-method-text { font-size: 14px; font-weight: 600; color: var(--grey-900); }
+  .pay-method-sub { font-size: 12px; color: var(--grey-500); }
+  .pay-copy-btn {
+    width: 100%; padding: 14px; border-radius: var(--radius);
+    background: var(--brand); color: white; border: none;
+    font-size: 15px; font-weight: 600; cursor: pointer; margin-top: auto;
+  }
+  .pay-progress {
+    display: flex; align-items: center; gap: 8px; margin-top: 16px;
+    font-size: 13px; color: var(--grey-500);
+  }
+  .pay-progress-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .pay-progress-dot.done { background: var(--success); }
+  .pay-progress-dot.active { background: var(--warning); animation: pulse 1.5s infinite; }
+  .pay-progress-dot.pending { background: var(--grey-300); }
+  .pay-progress-line { flex: 1; height: 2px; background: var(--grey-200); }
+  .pay-progress-line.done { background: var(--success); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+  }
+
+  /* === HOST DASHBOARD === */
+  .host-dash { padding: 36px 20px 20px; }
+  .host-greeting { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .host-date { font-size: 13px; color: var(--grey-500); margin-bottom: 20px; }
+  .host-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .host-stat {
+    padding: 14px; border-radius: var(--radius-sm); background: var(--grey-50);
+    border: 1px solid var(--grey-100);
+  }
+  .host-stat-value { font-size: 22px; font-weight: 700; }
+  .host-stat-value.money { color: var(--success); }
+  .host-stat-value.rating { color: var(--warning); }
+  .host-stat-label { font-size: 12px; color: var(--grey-500); margin-top: 2px; }
+  .host-section-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+  .host-booking {
+    display: flex; gap: 12px; padding: 12px; border-radius: var(--radius-sm);
+    background: white; border: 1px solid var(--grey-200); margin-bottom: 8px;
+    align-items: center;
+  }
+  .host-booking-avatar {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--brand-light);
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+    flex-shrink: 0;
+  }
+  .host-booking-info { flex: 1; }
+  .host-booking-name { font-size: 14px; font-weight: 600; }
+  .host-booking-meta { font-size: 12px; color: var(--grey-500); }
+  .host-booking-status {
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  }
+  .host-booking-status.confirmed { background: #dcfce7; color: #166534; }
+  .host-booking-status.pending { background: #fef3c7; color: #92400e; }
+  .host-booking-status.checkin { background: var(--brand-light); color: var(--brand-text); }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .screens { flex-direction: column; align-items: center; }
+    .comparison { flex-direction: column; align-items: center; }
+    .d6-hero { flex-direction: column; padding: 32px 20px; }
+    .d6-hero-img { width: 100%; height: 200px; }
+    .d6-features { flex-direction: column; align-items: center; padding: 32px 20px; }
+    .d6-stats { flex-wrap: wrap; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <h1>ЖильеGO</h1>
+  <div class="nav-pills">
+    <div class="nav-pill active" onclick="showDir(1)">1. Airy White</div>
+    <div class="nav-pill" onclick="showDir(2)">2. Glass Blur</div>
+    <div class="nav-pill" onclick="showDir(3)">3. Card Stack</div>
+    <div class="nav-pill" onclick="showDir(4)">4. Split View</div>
+    <div class="nav-pill" onclick="showDir(5)">5. Map-First</div>
+    <div class="nav-pill" onclick="showDir(6)">6. Landing + Host</div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ===== DIRECTION 1: Airy White ===== -->
+  <section class="direction active" id="dir-1">
+    <div class="dir-header">
+      <h2>1. Airy White</h2>
+      <p class="subtitle">Чистый минимализм с акцентом на фотографии. Белое пространство, тонкие границы, фото как главный элемент. Overlay с ценой и действиями поверх изображения.</p>
+      <div class="tags">
+        <span class="tag">Airbnb-style</span>
+        <span class="tag">Photo-first</span>
+        <span class="tag">Clean overlay</span>
+        <span class="tag grey">Рекомендация Sally</span>
+      </div>
+    </div>
+    <div class="screens">
+      <!-- Card Screen -->
+      <div class="screen-wrap">
+        <span class="screen-label">Карточка квартиры</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div style="position:relative">
+              <div class="d1-card-img img-gradient-1">
+                <div class="img-placeholder">🏠</div>
+                <div class="d1-gallery-dots">
+                  <div class="d1-dot active"></div>
+                  <div class="d1-dot"></div>
+                  <div class="d1-dot"></div>
+                  <div class="d1-dot"></div>
+                  <div class="d1-dot"></div>
+                </div>
+              </div>
+              <div class="d1-overlay">
+                <div class="d1-badges">
+                  <span class="d1-badge instant">⚡ Мгновенный</span>
+                  <span class="d1-badge verified">✓ Проверено</span>
+                  <span class="d1-badge rating">★ 4.8</span>
+                </div>
+                <div class="d1-price">12 000 ₸ <span>/ ночь</span></div>
+                <div class="d1-location">📍 Кенесары 40, Есиль район</div>
+              </div>
+            </div>
+            <div class="d1-actions">
+              <button class="d1-btn primary">Забронировать</button>
+              <button class="d1-btn secondary">❤️</button>
+            </div>
+            <div class="d1-details">
+              <div class="d1-detail-row"><span class="d1-detail-icon">🛏</span> 1 комната, 2 гостя</div>
+              <div class="d1-detail-row"><span class="d1-detail-icon">📶</span> WiFi, кондиционер, стиральная</div>
+              <div class="d1-detail-row"><span class="d1-detail-icon">🅿️</span> Парковка, рядом ТРЦ Mega</div>
+              <div class="d1-detail-row"><span class="d1-detail-icon">⭐</span> 24 отзыва — "Чисто и уютно"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Search Screen -->
+      <div class="screen-wrap">
+        <span class="screen-label">Поиск</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="d1-search-header">
+              <div class="d1-search-greeting">Привет! 🏠<br>Ищешь квартиру?</div>
+              <div class="d1-search-bar">
+                <span class="d1-search-icon">🔍</span>
+                <input placeholder="Квартира в центре на завтра..." readonly>
+              </div>
+            </div>
+            <div class="d1-quick-filters">
+              <div class="d1-filter-chip active">⚡ Сейчас</div>
+              <div class="d1-filter-chip">💰 До 10К</div>
+              <div class="d1-filter-chip">📍 Центр</div>
+              <div class="d1-filter-chip">🛏 2 комнаты</div>
+            </div>
+            <div style="padding: 8px 20px; font-size: 14px; color: var(--grey-500);">Нашёл 5 квартир. Лучшие:</div>
+            <div class="d1-result-card">
+              <div class="d1-result-img img-gradient-1">
+                <div class="img-placeholder" style="font-size:32px">🏠</div>
+                <div class="d1-result-heart">❤️</div>
+              </div>
+              <div class="d1-result-info">
+                <div class="d1-result-price">12 000 ₸ <span>/ ночь</span></div>
+                <div class="d1-result-meta">📍 Кенесары 40 · 1 комната · 2 гостя</div>
+                <div class="d1-result-badges-row">
+                  <span class="d1-mini-badge instant">⚡ Мгновенный</span>
+                  <span class="d1-mini-badge rating">★ 4.8 (24)</span>
+                </div>
+              </div>
+            </div>
+            <div class="d1-result-card">
+              <div class="d1-result-img img-gradient-3">
+                <div class="img-placeholder" style="font-size:32px">🏢</div>
+                <div class="d1-result-heart">🤍</div>
+              </div>
+              <div class="d1-result-info">
+                <div class="d1-result-price">9 500 ₸ <span>/ ночь</span></div>
+                <div class="d1-result-meta">📍 Сарыарка 15 · 1 комната · 2 гостя</div>
+                <div class="d1-result-badges-row">
+                  <span class="d1-mini-badge rating">★ 4.6 (18)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DIRECTION 2: Glass Blur ===== -->
+  <section class="direction" id="dir-2">
+    <div class="dir-header">
+      <h2>2. Glass Blur</h2>
+      <p class="subtitle">Фото на весь экран с glassmorphism-панелями. Современный, иммерсивный, максимальный акцент на визуале. Информация через полупрозрачные blur-слои.</p>
+      <div class="tags">
+        <span class="tag">Glassmorphism</span>
+        <span class="tag">Immersive</span>
+        <span class="tag">Full-bleed photo</span>
+        <span class="tag grey">Ночной режим</span>
+      </div>
+    </div>
+    <div class="screens">
+      <div class="screen-wrap">
+        <span class="screen-label">Карточка квартиры</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="d2-card">
+              <div class="d2-fullimg img-gradient-1">
+                <div class="img-placeholder">🏠</div>
+              </div>
+              <div class="d2-glass">
+                <div class="d2-glass-inner">
+                  <div class="d2-glass-price">12 000 ₸ <span>/ ночь</span></div>
+                  <div class="d2-glass-loc">📍 Кенесары 40, Есиль район</div>
+                  <div class="d2-glass-badges">
+                    <span class="d2-glass-badge">⚡ Мгновенный</span>
+                    <span class="d2-glass-badge">✓ Проверено</span>
+                    <span class="d2-glass-badge">★ 4.8</span>
+                  </div>
+                </div>
+                <button class="d2-glass-btn">Забронировать</button>
+                <div class="d2-glass-secondary">
+                  <button class="d2-glass-sec-btn">❤️ Сохранить</button>
+                  <button class="d2-glass-sec-btn">📍 На карте</button>
+                  <button class="d2-glass-sec-btn">📸 Все фото</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-wrap">
+        <span class="screen-label">Вариант с dark фото</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="d2-card">
+              <div class="d2-fullimg" style="background: linear-gradient(135deg, #0c0c1d 0%, #1a1a3e 50%, #2d1b69 100%);">
+                <div class="img-placeholder" style="font-size: 64px;">🌙</div>
+              </div>
+              <div class="d2-glass">
+                <div class="d2-glass-inner">
+                  <div class="d2-glass-price">8 000 ₸ <span>/ ночь</span></div>
+                  <div class="d2-glass-loc">📍 Мангилик Ел 17, центр</div>
+                  <div class="d2-glass-badges">
+                    <span class="d2-glass-badge">⚡ Сейчас свободна</span>
+                    <span class="d2-glass-badge">★ 4.5</span>
+                  </div>
+                </div>
+                <button class="d2-glass-btn">Заселиться сейчас</button>
+                <div class="d2-glass-secondary">
+                  <button class="d2-glass-sec-btn">❤️</button>
+                  <button class="d2-glass-sec-btn">📍</button>
+                  <button class="d2-glass-sec-btn">📸</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DIRECTION 3: Card Stack ===== -->
+  <section class="direction" id="dir-3">
+    <div class="dir-header">
+      <h2>3. Card Stack</h2>
+      <p class="subtitle">Горизонтальный скролл карточек в стиле app store. Персонализированный хаб с приветствием, быстрыми фильтрами и секциями "Рядом с вами" / "Популярные".</p>
+      <div class="tags">
+        <span class="tag">App-style</span>
+        <span class="tag">Horizontal scroll</span>
+        <span class="tag">Personalized</span>
+        <span class="tag grey">Discovery-focused</span>
+      </div>
+    </div>
+    <div class="screens">
+      <div class="screen-wrap">
+        <span class="screen-label">Главная / Discovery</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="d3-stack">
+              <div class="d3-top">
+                <div class="d3-greeting">Привет, Erda 👋</div>
+                <div class="d3-avatar">E</div>
+              </div>
+              <div class="d3-search-mini">
+                <span>🔍</span> Куда едем?
+              </div>
+              <div class="d3-section-title">⚡ Заселиться сейчас</div>
+              <div class="d3-cards-scroll">
+                <div class="d3-mini-card">
+                  <div class="d3-mini-img img-gradient-1">
+                    <div class="img-placeholder" style="font-size:28px">🏠</div>
+                    <div class="d3-mini-overlay">
+                      <span class="d3-mini-tag">⚡</span>
+                      <span class="d3-mini-tag">★ 4.8</span>
+                    </div>
+                  </div>
+                  <div class="d3-mini-info">
+                    <div class="d3-mini-price">12 000 ₸ <span>/ ночь</span></div>
+                    <div class="d3-mini-loc">Кенесары 40</div>
+                    <div class="d3-mini-rating">✓ Проверено · 24 отзыва</div>
+                  </div>
+                </div>
+                <div class="d3-mini-card">
+                  <div class="d3-mini-img img-gradient-3">
+                    <div class="img-placeholder" style="font-size:28px">🏢</div>
+                    <div class="d3-mini-overlay">
+                      <span class="d3-mini-tag">⚡</span>
+                      <span class="d3-mini-tag">★ 4.6</span>
+                    </div>
+                  </div>
+                  <div class="d3-mini-info">
+                    <div class="d3-mini-price">9 500 ₸ <span>/ ночь</span></div>
+                    <div class="d3-mini-loc">Сарыарка 15</div>
+                    <div class="d3-mini-rating">✓ Проверено · 18 отзывов</div>
+                  </div>
+                </div>
+                <div class="d3-mini-card">
+                  <div class="d3-mini-img img-gradient-5">
+                    <div class="img-placeholder" style="font-size:28px">🌇</div>
+                    <div class="d3-mini-overlay">
+                      <span class="d3-mini-tag">★ 4.9</span>
+                    </div>
+                  </div>
+                  <div class="d3-mini-info">
+                    <div class="d3-mini-price">15 000 ₸ <span>/ ночь</span></div>
+                    <div class="d3-mini-loc">Мангилик Ел 17</div>
+                    <div class="d3-mini-rating">✓ Проверено · 31 отзыв</div>
+                  </div>
+                </div>
+              </div>
+              <div style="height:16px"></div>
+              <div class="d3-section-title">🔥 Популярные на этой неделе</div>
+              <div class="d3-cards-scroll">
+                <div class="d3-mini-card">
+                  <div class="d3-mini-img img-gradient-4">
+                    <div class="img-placeholder" style="font-size:28px">🌿</div>
+                    <div class="d3-mini-overlay">
+                      <span class="d3-mini-tag">★ 4.9</span>
+                    </div>
+                  </div>
+                  <div class="d3-mini-info">
+                    <div class="d3-mini-price">18 000 ₸ <span>/ ночь</span></div>
+                    <div class="d3-mini-loc">Байтурсынова 5</div>
+                    <div class="d3-mini-rating">Люкс · 2 комнаты</div>
+                  </div>
+                </div>
+                <div class="d3-mini-card">
+                  <div class="d3-mini-img img-gradient-6">
+                    <div class="img-placeholder" style="font-size:28px">🛋</div>
+                    <div class="d3-mini-overlay">
+                      <span class="d3-mini-tag">★ 4.7</span>
+                    </div>
+                  </div>
+                  <div class="d3-mini-info">
+                    <div class="d3-mini-price">11 000 ₸ <span>/ ночь</span></div>
+                    <div class="d3-mini-loc">Туран 50</div>
+                    <div class="d3-mini-rating">✓ Проверено · WiFi</div>
+                  </div>
+                </div>
+              </div>
+              <div class="d3-bottom-nav">
+                <div class="d3-nav-item active"><span class="d3-nav-icon">🏠</span>Главная</div>
+                <div class="d3-nav-item"><span class="d3-nav-icon">🔍</span>Поиск</div>
+                <div class="d3-nav-item"><span class="d3-nav-icon">❤️</span>Избранное</div>
+                <div class="d3-nav-item"><span class="d3-nav-icon">📋</span>Бронирования</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DIRECTION 4: Split View ===== -->
+  <section class="direction" id="dir-4">
+    <div class="dir-header">
+      <h2>4. Split View</h2>
+      <p class="subtitle">Экран поделён 50/50: фото слева, информация справа. Максимально эффективное использование пространства, ничего лишнего. Идеально для tablet.</p>
+      <div class="tags">
+        <span class="tag">Split layout</span>
+        <span class="tag">Efficient</span>
+        <span class="tag">Tablet-ready</span>
+        <span class="tag grey">Info-dense</span>
+      </div>
+    </div>
+    <div class="screens">
+      <div class="screen-wrap">
+        <span class="screen-label">Карточка квартиры</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="d4-split">
+              <div class="d4-left img-gradient-1">
+                <div class="d4-left-overlay">
+                  <div class="d4-dots">
+                    <div class="d4-dot active"></div>
+                    <div class="d4-dot"></div>
+                    <div class="d4-dot"></div>
+                    <div class="d4-dot"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="d4-right">
+                <div class="d4-right-price">12 000 ₸ <span>/ ночь</span></div>
+                <div class="d4-right-loc">📍 Кенесары 40, Есиль</div>
+                <div class="d4-right-badges">
+                  <span class="d4-right-badge instant">⚡ Мгновенный</span>
+                  <span class="d4-right-badge verified">✓ Проверено</span>
+                  <span class="d4-right-badge rating">★ 4.8</span>
+                </div>
+                <div class="d4-right-divider"></div>
+                <div class="d4-right-features">
+                  <div class="d4-feature">🛏 1 комн</div>
+                  <div class="d4-feature">👥 2 гостя</div>
+                  <div class="d4-feature">📶 WiFi</div>
+                  <div class="d4-feature">❄️ Конд.</div>
+                  <div class="d4-feature">🅿️ Парковка</div>
+                </div>
+                <div class="d4-right-divider"></div>
+                <div style="font-size:13px; color: var(--grey-500); line-height: 1.5;">
+                  Уютная квартира в центре с видом на Байтерек. 5 мин до метро.
+                </div>
+                <button class="d4-right-btn">Забронировать</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DIRECTION 5: Map-First ===== -->
+  <section class="direction" id="dir-5">
+    <div class="dir-header">
+      <h2>5. Map-First</h2>
+      <p class="subtitle">Карта как основной интерфейс поиска. Пины с ценами, bottom sheet с деталями. Идеально для on-demand сценария "рядом со мной".</p>
+      <div class="tags">
+        <span class="tag">Map-centric</span>
+        <span class="tag">Uber/2GIS style</span>
+        <span class="tag">Location-first</span>
+        <span class="tag grey">On-demand</span>
+      </div>
+    </div>
+    <div class="screens">
+      <div class="screen-wrap">
+        <span class="screen-label">Поиск на карте</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="d5-map">
+              <div class="d5-map-header">
+                <div class="d5-map-search">
+                  <span class="d5-map-search-icon">🔍</span>
+                  Квартира рядом со мной
+                </div>
+                <div class="d5-map-filters">
+                  <div class="d5-map-filter active">⚡ Сейчас</div>
+                  <div class="d5-map-filter">💰 До 10К</div>
+                  <div class="d5-map-filter">🛏 1 комн</div>
+                </div>
+              </div>
+              <div class="d5-pins">
+                <div class="d5-pin active" style="top: 35%; left: 25%;">12К ₸</div>
+                <div class="d5-pin instant" style="top: 45%; left: 55%;">9.5К ₸</div>
+                <div class="d5-pin" style="top: 30%; left: 65%;">15К ₸</div>
+                <div class="d5-pin instant" style="top: 55%; left: 35%;">8К ₸</div>
+                <div class="d5-pin" style="top: 60%; left: 60%;">11К ₸</div>
+              </div>
+              <div class="d5-bottom-sheet">
+                <div class="d5-sheet-handle"></div>
+                <div class="d5-sheet-card">
+                  <div class="d5-sheet-img img-gradient-1"></div>
+                  <div class="d5-sheet-info">
+                    <div class="d5-sheet-price">12 000 ₸ <span>/ ночь</span></div>
+                    <div class="d5-sheet-meta">📍 Кенесары 40 · ★ 4.8</div>
+                    <div class="d5-sheet-badges">
+                      <span class="d5-sheet-badge" style="background:var(--brand-light);color:var(--brand-text);">⚡ Мгновенный</span>
+                      <span class="d5-sheet-badge" style="background:#dbeafe;color:#1d4ed8;">✓ Проверено</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="d5-sheet-btn">Забронировать</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DIRECTION 6: Landing + Host + Payment ===== -->
+  <section class="direction" id="dir-6">
+    <div class="dir-header">
+      <h2>6. Landing + Host Dashboard + Payment</h2>
+      <p class="subtitle">Дополнительные экраны: Landing page для конверсии, дашборд хозяина, и экран оплаты с прогресс-баром.</p>
+      <div class="tags">
+        <span class="tag">Landing</span>
+        <span class="tag">Host Dashboard</span>
+        <span class="tag">Payment Flow</span>
+        <span class="tag grey">Все платформы</span>
+      </div>
+    </div>
+
+    <!-- Landing Desktop -->
+    <div style="margin-bottom: 40px;">
+      <div class="screen-label" style="text-align:center; margin-bottom: 16px;">LANDING PAGE (Desktop)</div>
+      <div class="desktop">
+        <div class="desktop-bar">
+          <div class="desktop-dot red"></div>
+          <div class="desktop-dot yellow"></div>
+          <div class="desktop-dot green"></div>
+          <div class="desktop-url">zhilye.go</div>
+        </div>
+        <div class="desktop-content d6-landing">
+          <div class="d6-nav">
+            <div class="d6-logo">Жилье<span>GO</span></div>
+            <div class="d6-nav-links">
+              <span>Как это работает</span>
+              <span>Для хозяев</span>
+              <span>Отзывы</span>
+            </div>
+            <button class="d6-nav-cta">Открыть в Telegram</button>
+          </div>
+          <div class="d6-hero">
+            <div class="d6-hero-text">
+              <div class="d6-hero-title">Квартира в Астане<br><span>за 5 минут.</span><br>Без звонков.</div>
+              <div class="d6-hero-sub">Напишите боту что ищете — он подберёт квартиру, примет оплату и пришлёт код замка. Прямо в Telegram.</div>
+              <button class="d6-hero-cta">💬 Открыть бот в Telegram</button>
+            </div>
+            <div class="d6-hero-img img-gradient-1">
+              <div class="d6-hero-mock-overlay">
+                <div class="d6-hero-mock-price">12 000 ₸ / ночь</div>
+                <div class="d6-hero-mock-loc">📍 Кенесары 40 · ★ 4.8</div>
+              </div>
+            </div>
+          </div>
+          <div class="d6-stats">
+            <div class="d6-stat"><div class="d6-stat-num">200+</div><div class="d6-stat-label">квартир</div></div>
+            <div class="d6-stat"><div class="d6-stat-num">4.7</div><div class="d6-stat-label">средний рейтинг</div></div>
+            <div class="d6-stat"><div class="d6-stat-num">5 мин</div><div class="d6-stat-label">до заселения</div></div>
+            <div class="d6-stat"><div class="d6-stat-num">0</div><div class="d6-stat-label">звонков</div></div>
+          </div>
+          <div class="d6-features">
+            <div class="d6-feature">
+              <div class="d6-feature-icon">💬</div>
+              <div class="d6-feature-title">Пишете боту</div>
+              <div class="d6-feature-desc">Опишите что ищете на обычном языке. Бот поймёт и подберёт лучшие варианты.</div>
+            </div>
+            <div class="d6-feature">
+              <div class="d6-feature-icon">💳</div>
+              <div class="d6-feature-title">Оплачиваете через Kaspi</div>
+              <div class="d6-feature-desc">Привычный перевод через Kaspi. Прогресс-бар покажет статус подтверждения.</div>
+            </div>
+            <div class="d6-feature">
+              <div class="d6-feature-icon">🔑</div>
+              <div class="d6-feature-title">Получаете код замка</div>
+              <div class="d6-feature-desc">Код приходит в чат. Набрали на замке — дверь открылась. Всё.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Host + Payment -->
+    <div class="screens">
+      <div class="screen-wrap">
+        <span class="screen-label">Дашборд хозяина</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="host-dash">
+              <div class="host-greeting">Доброе утро, Айнура 👋</div>
+              <div class="host-date">7 февраля 2026</div>
+              <div class="host-stats">
+                <div class="host-stat">
+                  <div class="host-stat-value money">+45 000 ₸</div>
+                  <div class="host-stat-label">за эту неделю</div>
+                </div>
+                <div class="host-stat">
+                  <div class="host-stat-value rating">★ 4.8</div>
+                  <div class="host-stat-label">средний рейтинг</div>
+                </div>
+                <div class="host-stat">
+                  <div class="host-stat-value">12</div>
+                  <div class="host-stat-label">бронирований</div>
+                </div>
+                <div class="host-stat">
+                  <div class="host-stat-value" style="color:var(--brand)">3</div>
+                  <div class="host-stat-label">квартиры</div>
+                </div>
+              </div>
+              <div class="host-section-title">Сегодня</div>
+              <div class="host-booking">
+                <div class="host-booking-avatar">Е</div>
+                <div class="host-booking-info">
+                  <div class="host-booking-name">Ердаулет К.</div>
+                  <div class="host-booking-meta">Кенесары 40 · Заезд 14:00</div>
+                </div>
+                <div class="host-booking-status checkin">Заезд</div>
+              </div>
+              <div class="host-booking">
+                <div class="host-booking-avatar">А</div>
+                <div class="host-booking-info">
+                  <div class="host-booking-name">Аслан М.</div>
+                  <div class="host-booking-meta">Сарыарка 15 · Выезд 12:00</div>
+                </div>
+                <div class="host-booking-status confirmed">Выезд</div>
+              </div>
+              <div class="host-booking">
+                <div class="host-booking-avatar">Д</div>
+                <div class="host-booking-info">
+                  <div class="host-booking-name">Дима Р.</div>
+                  <div class="host-booking-meta">Туран 50 · Ожидает оплаты</div>
+                </div>
+                <div class="host-booking-status pending">Ожидание</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-wrap">
+        <span class="screen-label">Оплата (Kaspi)</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="pay-screen">
+              <div class="pay-back">← Назад</div>
+              <div class="pay-title">Оплата бронирования</div>
+              <div class="pay-summary">
+                <div class="pay-summary-row"><span>Кенесары 40, 1 комната</span><span>12 000 ₸</span></div>
+                <div class="pay-summary-row"><span>7-8 февраля (1 ночь)</span></div>
+                <div class="pay-summary-row"><span>Сбор за защиту</span><span>500 ₸</span></div>
+                <div class="pay-summary-row total"><span>Итого</span><span>12 500 ₸</span></div>
+              </div>
+              <div class="pay-timer">⏳ Квартира зарезервирована на 10:00 мин</div>
+              <div class="pay-method">
+                <span class="pay-method-icon">🏦</span>
+                <div>
+                  <div class="pay-method-text">Kaspi перевод</div>
+                  <div class="pay-method-sub">На номер +7 701 *** ** 45</div>
+                </div>
+              </div>
+              <button class="pay-copy-btn">📋 Скопировать реквизиты</button>
+              <div style="text-align:center; margin-top: 12px; font-size: 13px; color: var(--grey-500);">
+                После перевода отправьте скриншот сюда
+              </div>
+              <div class="pay-progress">
+                <div class="pay-progress-dot done"></div>
+                <div class="pay-progress-line done"></div>
+                <div class="pay-progress-dot active"></div>
+                <div class="pay-progress-line"></div>
+                <div class="pay-progress-dot pending"></div>
+              </div>
+              <div style="display:flex; justify-content: space-between; font-size: 11px; color: var(--grey-400); margin-top: 4px;">
+                <span>Реквизиты</span>
+                <span style="color:var(--warning); font-weight:600;">Оплата</span>
+                <span>Подтверждение</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+function showDir(n) {
+  document.querySelectorAll('.direction').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('dir-' + n).classList.add('active');
+  document.querySelectorAll('.nav-pill')[n - 1].classList.add('active');
+}
+</script>
+
+</body>
+</html>
